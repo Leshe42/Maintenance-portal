@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaintenancePro - Maintenance Management System</title>
+    <link rel="stylesheet" href="design-system.css">
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #2563eb 0%, #0369a1 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .hero h1 {
+            font-size: 40px;
+            margin: 0 0 16px 0;
+            font-weight: 700;
+        }
+        .hero p {
+            font-size: 18px;
+            margin: 0 0 32px 0;
+            opacity: 0.95;
+        }
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .role-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .role-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        .role-card-header {
+            padding: 32px 24px;
+            text-align: center;
+        }
+        .role-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+        .role-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+        .role-card p {
+            color: var(--muted-foreground);
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .role-card-color {
+            height: 4px;
+        }
+        .role-card-body {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .role-card-body ul {
+            margin: 0 0 24px 0;
+            padding: 0 0 0 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .role-card-body li {
+            margin-bottom: 8px;
+            color: var(--foreground);
+        }
+        .role-card-footer {
+            padding: 0 24px 24px 24px;
+            display: flex;
+            gap: 8px;
+        }
+        .btn-large {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .color-planner { background: #7c3aed; }
+        .color-engineer { background: #0369a1; }
+        .color-workman { background: #047857; }
+        .features {
+            background: #f8fafc;
+            padding: 60px 20px;
+            margin-top: 60px;
+        }
+        .features h2 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 40px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .feature-item {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .feature-item h4 {
+            font-size: 16px;
+            margin-top: 12px;
+            margin-bottom: 8px;
+            color: var(--foreground);
+        }
+        .feature-item p {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            line-height: 1.5;
+            margin: 0;
+        }
+        .feature-icon {
+            font-size: 32px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .footer {
+            background: #0f1729;
+            color: #94a3b8;
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>MaintenancePro</h1>
+            <p>Professional Maintenance Management System for Industrial Operations</p>
+            <div style="font-size: 14px; opacity: 0.9;">Three-role platform: Planner, Engineer, Workman</div>
+        </div>
+    </section>
+
+    <!-- Role Selection -->
+    <section class="container">
+        <h2 style="text-align: center; font-size: 28px; margin-bottom: 40px; color: var(--foreground);">Select Your Role</h2>
+        
+        <div class="role-cards">
+            <!-- Planner Card -->
+            <div class="role-card">
+                <div class="role-card-header">
+                    <div class="role-icon">📋</div>
+                    <h3>Maintenance Planner</h3>
+                    <p>Plan and schedule maintenance work</p>
+                </div>
+                <div class="role-card-color color-planner"></div>
+                <div class="role-card-body">
+                    <ul>
+                        <li>Create work orders</li>
+                        <li>Schedule maintenance</li>
+                        <li>Generate job cards</li>
+                        <li>View maintenance calendar</li>
+                        <li>Track asset maintenance history</li>
+                    </ul>
+                </div>
+                <div class="role-card-footer">
+                    <a href="dashboard-planner.html" class="btn btn-primary btn-large">Open Dashboard</a>
+                </div>
+            </div>
+
+            <!-- Engineer Card -->
+            <div class="role-card">
+                <div class="role-card-header">
+                    <div class="role-icon">🔧</div>
+                    <h3>Maintenance Engineer</h3>
+                    <p>Oversee and verify maintenance</p>
+                </div>
+                <div class="role-card-color color-engineer"></div>
+                <div class="role-card-body">
+                    <ul>
+                        <li>Assign workmen to jobs</li>
+                        <li>Monitor job progress</li>
+                        <li>Verify completed work</li>
+                        <li>Track team workload</li>
+                        <li>Manage job assignments</li>
+                    </ul>
+                </div>
+                <div class="role-card-footer">
+                    <a href="dashboard-engineer.html" class="btn btn-primary btn-large">Open Dashboard</a>
+                </div>
+            </div>
+
+            <!-- Workman Card -->
+            <div class="role-card">
+                <div class="role-card-header">
+                    <div class="role-icon">👷</div>
+                    <h3>Workman</h3>
+                    <p>Execute maintenance tasks</p>
+                </div>
+                <div class="role-card-color color-workman"></div>
+                <div class="role-card-body">
+                    <ul>
+                        <li>View assigned job cards</li>
+                        <li>Start and track work</li>
+                        <li>Record work performed</li>
+                        <li>Submit completion reports</li>
+                        <li>View work history</li>
+                    </ul>
+                </div>
+                <div class="role-card-footer">
+                    <a href="dashboard-workman.html" class="btn btn-primary btn-large">Open Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2>Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h4>Real-time Dashboards</h4>
+                    <p>Monitor maintenance operations with live KPI tracking and status updates for each role</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🗓</div>
+                    <h4>Scheduling & Planning</h4>
+                    <p>Plan routine and unplanned maintenance with calendar views, date/time scheduling, and conflict detection</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">👥</div>
+                    <h4>Team Management</h4>
+                    <p>Assign work to technicians, track workload distribution, and monitor individual performance</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <h4>Work Verification</h4>
+                    <p>Engineers verify completed work, approve findings, and close jobs with audit trails</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📈</div>
+                    <h4>Reporting & Analytics</h4>
+                    <p>Track completion rates, analyze maintenance costs, and generate performance reports</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🏭</div>
+                    <h4>Asset Management</h4>
+                    <p>Manage equipment, track maintenance history, and plan preventive maintenance schedules</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <section class="footer">
+        <p>MaintenancePro © 2026 | TPPL/TAZAMA Operations Portal | Design System v2.0</p>
+        <p style="margin-top: 12px;">Three-Role Dashboard | Professional UI/UX | Production Ready</p>
+    </section>
+</body>
+</html>

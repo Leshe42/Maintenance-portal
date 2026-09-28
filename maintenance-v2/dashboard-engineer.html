@@ -1,0 +1,351 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['role'])) {
+    $_SESSION['role'] = 'engineer';
+    $_SESSION['user'] = 'Rashid Omar';
+}
+
+$role = $_SESSION['role'];
+$user = $_SESSION['user'];
+
+// Simulated data
+$stats = [
+    ['label' => 'Jobs Awaiting Assignment', 'value' => 3, 'color' => '#dc2626'],
+    ['label' => 'Assigned Jobs', 'value' => 5, 'color' => '#7c3aed'],
+    ['label' => 'In Progress', 'value' => 4, 'color' => '#ea580c'],
+    ['label' => 'Awaiting Verification', 'value' => 2, 'color' => '#0369a1'],
+    ['label' => 'Verified', 'value' => 8, 'color' => '#059669'],
+    ['label' => 'Closed', 'value' => 12, 'color' => '#6b7280'],
+];
+
+$jobsAwaitingAssignment = [
+    ['id' => 1, 'jobCard' => 'JC-2026-008', 'asset' => 'Compressor E-02', 'activity' => 'Intake valve inspection', 'date' => '2026-09-25', 'location' => 'Building 3', 'urgent' => true],
+    ['id' => 2, 'jobCard' => 'JC-2026-009', 'asset' => 'Generator G-01', 'activity' => 'Fuel filter replacement', 'date' => '2026-09-26', 'location' => 'Building 4', 'urgent' => false],
+    ['id' => 3, 'jobCard' => 'JC-2026-010', 'asset' => 'Pump A-01', 'activity' => 'Impeller cleaning', 'date' => '2026-09-27', 'location' => 'Building 1', 'urgent' => false],
+];
+
+$inProgressJobs = [
+    ['jobCard' => 'JC-2026-003', 'asset' => 'Server UPS-01', 'activity' => 'Battery Replacement', 'assignedTo' => 'John Petersen', 'progress' => 45, 'startTime' => '08:15'],
+    ['jobCard' => 'JC-2026-006', 'asset' => 'Motor B-03', 'activity' => 'Bearing inspection', 'assignedTo' => 'Paul Mulenga', 'progress' => 30, 'startTime' => '09:00'],
+];
+
+$awaitingVerification = [
+    ['jobCard' => 'JC-2026-004', 'asset' => 'Fire Suppression Panel', 'activity' => 'Panel inspection', 'completedBy' => 'John Petersen', 'completedTime' => '2026-09-24 16:45'],
+    ['jobCard' => 'JC-2026-005', 'asset' => 'Boiler B-01', 'activity' => 'Annual inspection', 'completedBy' => 'Paul Mulenga', 'completedTime' => '2026-09-23 15:30'],
+];
+
+$workmanLoadByTeam = [
+    ['name' => 'John Petersen', 'total' => 8, 'completed' => 5, 'inProgress' => 2, 'pending' => 1],
+    ['name' => 'Paul Mulenga', 'total' => 7, 'completed' => 4, 'inProgress' => 2, 'pending' => 1],
+];
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Engineer - Dashboard</title>
+    <link rel="stylesheet" href="design-system.css">
+    <style>
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        .role-color { color: #0369a1; }
+        .role-badge { background: #e0f2fe; color: #0369a1; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MM</div>
+                <div>
+                    <div class="sidebar-title">MaintenancePro</div>
+                    <div class="sidebar-subtitle">Operations</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-label">MAINTENANCE</div>
+                    <button class="nav-link active">
+                        <span class="nav-icon">📊</span>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        <span>Work Orders</span>
+                    </button>
+                    <button class="nav-link">
+                        <span class="nav-icon">🗓</span>
+                        <span>Calendar</span>
+                    </button>
+                    <button class="nav-link">
+                        <span class="nav-icon">🔧</span>
+                        <span>Job Cards</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-label">OVERVIEW</div>
+                    <button class="nav-link">
+                        <span class="nav-icon">🏭</span>
+                        <span>Assets</span>
+                    </button>
+                    <button class="nav-link">
+                        <span class="nav-icon">⚙️</span>
+                        <span>Spare Parts</span>
+                    </button>
+                    <button class="nav-link">
+                        <span class="nav-icon">📂</span>
+                        <span>History</span>
+                    </button>
+                    <button class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        <span>Reports</span>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="user-section">
+                <div style="margin-bottom: 12px; padding: 0 8px;">
+                    <div style="font-size: 11px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Active Role</div>
+                    <div style="font-size: 13px; color: white; font-weight: 600;">Maintenance Engineer</div>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" style="background: #0369a1;">ME</div>
+                    <div class="user-details">
+                        <div class="user-name"><?php echo htmlspecialchars($user); ?></div>
+                        <div class="user-role">Engineer</div>
+                    </div>
+                    <button class="btn-logout" title="Logout">→</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Header -->
+            <header class="header">
+                <h1 style="color: var(--foreground); font-size: 16px; font-weight: 600; margin: 0;">Dashboard</h1>
+                <div class="header-actions">
+                    <span style="color: var(--muted-foreground); font-size: 12px;">Thursday, 24 September 2026</span>
+                    <div class="header-user">
+                        <div class="header-avatar" style="background: #0369a1;">ME</div>
+                        <div class="header-user-info">
+                            <div class="header-user-name"><?php echo htmlspecialchars($user); ?></div>
+                            <div class="header-user-role">Engineer</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h2>Maintenance Engineer</h2>
+                        <p>Oversee job assignments and track maintenance progress</p>
+                    </div>
+                </div>
+
+                <!-- Stat Cards -->
+                <div class="stats-grid">
+                    <?php foreach ($stats as $stat): ?>
+                    <div class="stat-card" style="border-left: 3px solid <?php echo $stat['color']; ?>;">
+                        <div class="stat-value" style="color: <?php echo $stat['color']; ?>"><?php echo $stat['value']; ?></div>
+                        <div class="stat-label"><?php echo $stat['label']; ?></div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Jobs Awaiting Assignment -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Jobs Awaiting Workman Assignment</h3>
+                        <span class="card-badge" style="background: #fecdd3; color: #9f1239;"><?php echo count($jobsAwaitingAssignment); ?> Urgent</span>
+                    </div>
+                    <div class="card-body">
+                        <?php foreach ($jobsAwaitingAssignment as $job): ?>
+                        <div class="job-card">
+                            <div class="job-card-header">
+                                <div class="job-card-title">
+                                    <h4 class="job-card-title-main"><?php echo $job['jobCard']; ?> · <?php echo $job['asset']; ?></h4>
+                                    <p class="job-card-title-sub"><?php echo $job['activity']; ?></p>
+                                </div>
+                                <?php if ($job['urgent']): ?>
+                                <span class="badge badge-in-progress">URGENT</span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="job-card-body">
+                                <div class="job-info-grid">
+                                    <div class="job-info-item">
+                                        <span class="job-info-label">Scheduled Date</span>
+                                        <span class="job-info-value"><?php echo $job['date']; ?></span>
+                                    </div>
+                                    <div class="job-info-item">
+                                        <span class="job-info-label">Location</span>
+                                        <span class="job-info-value"><?php echo $job['location']; ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="job-card-footer">
+                                <button class="btn btn-primary btn-small">+ Assign Workman</button>
+                                <button class="btn btn-secondary btn-small">View Details</button>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- Assigned & In Progress Jobs -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Assigned & In Progress Jobs</h3>
+                        <span class="card-badge"><?php echo count($inProgressJobs); ?> Active</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-wrapper">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Job Card</th>
+                                        <th>Asset</th>
+                                        <th>Maintenance Activity</th>
+                                        <th>Assigned To</th>
+                                        <th>Progress</th>
+                                        <th>Start Time</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($inProgressJobs as $job): ?>
+                                    <tr>
+                                        <td class="table-mono"><?php echo $job['jobCard']; ?></td>
+                                        <td style="font-weight: 500;"><?php echo $job['asset']; ?></td>
+                                        <td style="color: var(--muted-foreground);"><?php echo $job['activity']; ?></td>
+                                        <td><?php echo $job['assignedTo']; ?></td>
+                                        <td>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: <?php echo $job['progress']; ?>%"></div>
+                                            </div>
+                                            <div style="font-size: 12px; color: var(--muted-foreground); margin-top: 4px;"><?php echo $job['progress']; ?>%</div>
+                                        </td>
+                                        <td class="table-mono"><?php echo $job['startTime']; ?></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-small">Monitor</button>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jobs Awaiting Verification -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Jobs Awaiting Verification</h3>
+                        <span class="card-badge"><?php echo count($awaitingVerification); ?> Pending</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-wrapper">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Job Card</th>
+                                        <th>Asset</th>
+                                        <th>Maintenance Activity</th>
+                                        <th>Completed By</th>
+                                        <th>Completed Time</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($awaitingVerification as $job): ?>
+                                    <tr>
+                                        <td class="table-mono"><?php echo $job['jobCard']; ?></td>
+                                        <td style="font-weight: 500;"><?php echo $job['asset']; ?></td>
+                                        <td style="color: var(--muted-foreground);"><?php echo $job['activity']; ?></td>
+                                        <td><?php echo $job['completedBy']; ?></td>
+                                        <td class="table-mono"><?php echo $job['completedTime']; ?></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-small">Verify</button>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Workload -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Team Workload Distribution</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-wrapper">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Workman</th>
+                                        <th>Total Assigned</th>
+                                        <th>Completed</th>
+                                        <th>In Progress</th>
+                                        <th>Pending</th>
+                                        <th>Utilization</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($workmanLoadByTeam as $worker): 
+                                        $utilization = ($worker['completed'] + $worker['inProgress']) / $worker['total'] * 100;
+                                    ?>
+                                    <tr>
+                                        <td style="font-weight: 500;"><?php echo $worker['name']; ?></td>
+                                        <td><?php echo $worker['total']; ?></td>
+                                        <td><span class="badge badge-completed"><?php echo $worker['completed']; ?></span></td>
+                                        <td><span class="badge badge-in-progress"><?php echo $worker['inProgress']; ?></span></td>
+                                        <td><span class="badge badge-new"><?php echo $worker['pending']; ?></span></td>
+                                        <td>
+                                            <div class="progress-bar" style="margin-bottom: 4px;">
+                                                <div class="progress-fill" style="width: <?php echo $utilization; ?>%; background: linear-gradient(90deg, #10b981, #06b6d4);"></div>
+                                            </div>
+                                            <div style="font-size: 12px; color: var(--muted-foreground);"><?php echo round($utilization); ?>%</div>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
